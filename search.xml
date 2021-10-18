@@ -4,6 +4,37 @@
   
     
     <entry>
+      <title>Unity服务器--什么是RPC?</title>
+      <link href="/2021/10/18/Unity%E6%9C%8D%E5%8A%A1%E5%99%A8-%E4%BB%80%E4%B9%88%E6%98%AFRPC/"/>
+      <url>/2021/10/18/Unity%E6%9C%8D%E5%8A%A1%E5%99%A8-%E4%BB%80%E4%B9%88%E6%98%AFRPC/</url>
+      
+        <content type="html"><![CDATA[<h2 id="前言："><a href="#前言：" class="headerlink" title="前言："></a>前言：</h2><p>在学习ET框架中Client与Server交互时的message信息中碰到的RpcId，之前没有太了解，固趁这个机会了解以下</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">知乎参考：https://zhuanlan.zhihu.com/p/76727302</span><br></pre></td></tr></table></figure><p>此篇可能会慢慢更新。。。</p><h2 id="RPC-调用分类"><a href="#RPC-调用分类" class="headerlink" title="RPC 调用分类"></a>RPC 调用分类</h2><p>RPC调用分为以下两种</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1. 同步调用  --c2s_new,s2c_new</span><br><span class="line">   客户方等待调用执行完成并返回结果。 </span><br><span class="line">2. 异步调用  --c2s_new,sreq_new</span><br><span class="line">   客户方调用后不用等待执行结果返回，但依然可以通过回调通知等方式获取返回结果。 </span><br><span class="line">   若客户方不关心调用返回结果，则变成单向异步调用，单向调用不用返回结果。</span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> 网络 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Unity </tag>
+            
+            <tag> 服务器 </tag>
+            
+            <tag> RPC </tag>
+            
+            <tag> 网络 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Leetcode记录:476 数字的补数</title>
       <link href="/2021/10/18/Leetcode%E8%AE%B0%E5%BD%95-476-%E6%95%B0%E5%AD%97%E7%9A%84%E8%A1%A5%E6%95%B0/"/>
       <url>/2021/10/18/Leetcode%E8%AE%B0%E5%BD%95-476-%E6%95%B0%E5%AD%97%E7%9A%84%E8%A1%A5%E6%95%B0/</url>
