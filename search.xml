@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>Leetcode: 66.加一</title>
+      <link href="/2021/10/21/Leetcode-66-%E5%8A%A0%E4%B8%80/"/>
+      <url>/2021/10/21/Leetcode-66-%E5%8A%A0%E4%B8%80/</url>
+      
+        <content type="html"><![CDATA[<h2 id="66-加一"><a href="#66-加一" class="headerlink" title="66. 加一"></a><a href="https://leetcode-cn.com/problems/plus-one/">66. 加一</a></h2><p><img src="/2021/10/21/Leetcode-66-%E5%8A%A0%E4%B8%80/image-20211021100630610.png" alt="image-20211021100630610"></p><h3 id="解题思路："><a href="#解题思路：" class="headerlink" title="解题思路："></a>解题思路：</h3><p>​        方法1：直接从最后一位开始模拟整个加法的过程即可</p><p>​        方法2：逆序查找第一个不为9的数加1，其余都设为0即可<span style="color:red">(感觉更简单)</span></p><p>以下是C++代码：</p><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">vector&lt;<span class="keyword">int</span>&gt; <span class="title">plusOne</span><span class="params">(vector&lt;<span class="keyword">int</span>&gt;&amp; digits)</span> </span>&#123;</span><br><span class="line">        vector&lt;<span class="keyword">int</span>&gt; ans=digits;</span><br><span class="line">        <span class="keyword">int</span> index=ans.<span class="built_in">size</span>()<span class="number">-1</span>;</span><br><span class="line">        <span class="keyword">int</span> add=<span class="number">1</span>;</span><br><span class="line">        <span class="keyword">while</span>(add==<span class="number">1</span> &amp;&amp; index&gt;=<span class="number">0</span>)&#123;</span><br><span class="line">            ans[index]+=add;</span><br><span class="line">            add=ans[index]/<span class="number">10</span>;</span><br><span class="line">            ans[index--]%=<span class="number">10</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//考虑最终有进位情况</span></span><br><span class="line">        <span class="keyword">if</span> (add==<span class="number">1</span>)&#123;</span><br><span class="line">            ans.<span class="built_in">insert</span>(ans.<span class="built_in">begin</span>(),<span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> 算法 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 学习心得 </tag>
+            
+            <tag> 算法 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Leetcode 453: 最小操作次数使数组元素相等</title>
       <link href="/2021/10/20/Leetcode-453-%E6%9C%80%E5%B0%8F%E6%93%8D%E4%BD%9C%E6%AC%A1%E6%95%B0%E4%BD%BF%E6%95%B0%E7%BB%84%E5%85%83%E7%B4%A0%E7%9B%B8%E7%AD%89/"/>
       <url>/2021/10/20/Leetcode-453-%E6%9C%80%E5%B0%8F%E6%93%8D%E4%BD%9C%E6%AC%A1%E6%95%B0%E4%BD%BF%E6%95%B0%E7%BB%84%E5%85%83%E7%B4%A0%E7%9B%B8%E7%AD%89/</url>
