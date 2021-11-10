@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>Leetcode: 495.提莫攻击</title>
+      <link href="/2021/11/10/Leetcode-495-%E6%8F%90%E8%8E%AB%E6%94%BB%E5%87%BB/"/>
+      <url>/2021/11/10/Leetcode-495-%E6%8F%90%E8%8E%AB%E6%94%BB%E5%87%BB/</url>
+      
+        <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h2 id="495-提莫攻击"><a href="#495-提莫攻击" class="headerlink" title="495. 提莫攻击"></a><a href="https://leetcode-cn.com/problems/teemo-attacking/">495. 提莫攻击</a></h2><p><img src="https://petertan-imgsubmit.oss-cn-guangzhou.aliyuncs.com/img/image-20211110100157656.png" alt="image-20211110100157656"></p><h3 id="解题思路："><a href="#解题思路：" class="headerlink" title="解题思路："></a>解题思路：</h3><p>​    一开始想着直接用set来去重，结果肯定是直接超时了。<br>​    后续考虑到给出的timeSeries是非递减的形式，可以用单次遍历的方法，用t存储下当前中毒结束时间。</p><ul><li>当t&lt;timeSeries[i]+duration时，表示着这个结束时间需要刷新，因此先对结果res+=timeSeries[i]+duration-t-max(timeSeries[i]-t,0) <span style="color:red">(后续的max是因为考虑到若中途有非中毒时间要减去)</span>，同时更新t=timeSeries[i]+duration</li></ul><p>以下为C++代码：</p><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">findPoisonedDuration</span><span class="params">(vector&lt;<span class="keyword">int</span>&gt;&amp; timeSeries, <span class="keyword">int</span> duration)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//用hashset记录下时间节点去重，最后获取其size()即可获得秒数（超时）</span></span><br><span class="line">        <span class="comment">// set&lt;int&gt; s;</span></span><br><span class="line">        <span class="comment">// int len=timeSeries.size();</span></span><br><span class="line">        <span class="comment">// for(int i=0;i&lt;len;i++)&#123;</span></span><br><span class="line">        <span class="comment">//     for(int j=0;j&lt;duration;j++)&#123;</span></span><br><span class="line">        <span class="comment">//         s.insert(timeSeries[i]+j);</span></span><br><span class="line">        <span class="comment">//     &#125;</span></span><br><span class="line">        <span class="comment">// &#125;</span></span><br><span class="line">        <span class="comment">// return s.size();</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">//遍历时记录下实际中毒的最大秒数</span></span><br><span class="line">        <span class="keyword">int</span> t=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">int</span> res=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">int</span> len=timeSeries.<span class="built_in">size</span>();</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;len;i++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(t&lt;timeSeries[i]+duration)&#123;</span><br><span class="line">                res+=timeSeries[i]+duration-t-<span class="built_in">max</span>(timeSeries[i]-t,<span class="number">0</span>);</span><br><span class="line">                t=timeSeries[i]+duration;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> 算法 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 学习心得 </tag>
+            
+            <tag> 算法 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Leetcode: 488.祖玛游戏</title>
       <link href="/2021/11/09/Leetcode-488-%E7%A5%96%E7%8E%9B%E6%B8%B8%E6%88%8F/"/>
       <url>/2021/11/09/Leetcode-488-%E7%A5%96%E7%8E%9B%E6%B8%B8%E6%88%8F/</url>
