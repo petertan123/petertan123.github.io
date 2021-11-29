@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>ET:引用第三方插件</title>
+      <link href="/2021/11/29/ET-%E5%BC%95%E7%94%A8%E7%AC%AC%E4%B8%89%E6%96%B9%E6%8F%92%E4%BB%B6/"/>
+      <url>/2021/11/29/ET-%E5%BC%95%E7%94%A8%E7%AC%AC%E4%B8%89%E6%96%B9%E6%8F%92%E4%BB%B6/</url>
+      
+        <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>​    ET 6.0正式版发布后，将Model、ModelView、Hotfix、HotfixView进一步移出了Unity/Assets部分，因此第三方导入只能通过修改csproj的方法添加。</p><h1 id="添加方法："><a href="#添加方法：" class="headerlink" title="添加方法："></a>添加方法：</h1><ul><li><p>Rider:直接对Project右键选择Add/Add Reference，添加对应的dll即可<br><img src="https://petertan-imgsubmit.oss-cn-guangzhou.aliyuncs.com/img/image-20211129203129372.png" alt="image-20211129203129372"></p></li><li><p>直接打开对应project的csproj，在其中加入下列代码，以Mountains.Feedback为例子</p><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Reference</span> <span class="attr">Include</span>=<span class="string">&quot;MoreMountains.Feedbacks, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null&quot;</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">HintPath</span>&gt;</span>Library\ScriptAssemblies\MoreMountains.Feedbacks.dll<span class="tag">&lt;/<span class="name">HintPath</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">Reference</span>&gt;</span></span><br></pre></td></tr></table></figure><p><span style="color:red">第三方插件编译后的dll存放在Library/ScriptAssemblies中。</span></p></li></ul><p>​        </p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Unity框架 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 学习心得 </tag>
+            
+            <tag> ET </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Shader剔除模拟Slider效果</title>
       <link href="/2021/11/29/Shader%E5%89%94%E9%99%A4%E6%A8%A1%E6%8B%9FSlider%E6%95%88%E6%9E%9C/"/>
       <url>/2021/11/29/Shader%E5%89%94%E9%99%A4%E6%A8%A1%E6%8B%9FSlider%E6%95%88%E6%9E%9C/</url>
@@ -159,11 +186,11 @@
             
             <tag> 学习心得 </tag>
             
+            <tag> ET </tag>
+            
             <tag> Unity </tag>
             
             <tag> 框架 </tag>
-            
-            <tag> ET </tag>
             
         </tags>
       
@@ -613,11 +640,11 @@
             
             <tag> 学习心得 </tag>
             
+            <tag> ET </tag>
+            
             <tag> Unity </tag>
             
             <tag> 框架 </tag>
-            
-            <tag> ET </tag>
             
         </tags>
       
@@ -696,11 +723,11 @@
       
         <tags>
             
+            <tag> ET </tag>
+            
             <tag> Unity </tag>
             
             <tag> 框架 </tag>
-            
-            <tag> ET </tag>
             
             <tag> demo </tag>
             
@@ -922,11 +949,11 @@
             
             <tag> 学习心得 </tag>
             
+            <tag> ET </tag>
+            
             <tag> Unity </tag>
             
             <tag> 框架 </tag>
-            
-            <tag> ET </tag>
             
         </tags>
       
