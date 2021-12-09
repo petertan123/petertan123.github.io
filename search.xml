@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>图形学:判断两个矩形是否相交</title>
+      <link href="/2021/12/09/%E5%9B%BE%E5%BD%A2%E5%AD%A6-%E5%88%A4%E6%96%AD%E4%B8%A4%E4%B8%AA%E7%9F%A9%E5%BD%A2%E6%98%AF%E5%90%A6%E7%9B%B8%E4%BA%A4/"/>
+      <url>/2021/12/09/%E5%9B%BE%E5%BD%A2%E5%AD%A6-%E5%88%A4%E6%96%AD%E4%B8%A4%E4%B8%AA%E7%9F%A9%E5%BD%A2%E6%98%AF%E5%90%A6%E7%9B%B8%E4%BA%A4/</url>
+      
+        <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">参考资料：</span><br><span class="line">https://www.jianshu.com/p/754ac621e6e3</span><br></pre></td></tr></table></figure><p>回想起以前和同事讨论的一道面试题，判断两个矩形是否相交，当时一开始只想到了最简单的根据某个矩形的中心点建立坐标系分情况讨论的方法。如今也算是重新补充一下</p><p>我们直接截取到Unity的Rect中Overlap方法来作为实现：</p><p><img src="https://petertan-imgsubmit.oss-cn-guangzhou.aliyuncs.com/img/image-20211209121516044.png" alt="image-20211209121516044"></p><p><span style="color:red">整体的思路是通过两个矩形的xMin,yMin,xMax,yMax进行比较，需要符合<strong>x1Min&lt;x2Max&amp;&amp;x1Max&gt;x2Min&amp;&amp;y1Min&lt;y2Max&amp;&amp;y1Max&gt;y2Min</strong>，我们粗略地画出符合这个要求的图。</span></p><p><img src="https://petertan-imgsubmit.oss-cn-guangzhou.aliyuncs.com/img/image-20211209122009114.png" alt="image-20211209122009114"></p><p>可能单靠这个图不是很明确，我们再把x，y分别拉成一维的直线</p><p><img src="https://petertan-imgsubmit.oss-cn-guangzhou.aliyuncs.com/img/image-20211209123531646.png" alt="image-20211209123531646"></p><p><span style="color:red">最后：△同样的思路可以拓展至三维</span></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 图形学 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 算法 </tag>
+            
+            <tag> 图形学 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Shader:透明度混合，平面下的外/内轮廓，立体下的外轮廓，菲涅尔现象，内发光现象总和</title>
       <link href="/2021/12/08/Shader-%E5%B9%B3%E9%9D%A2%E4%B8%8B%E7%9A%84%E5%A4%96-%E5%86%85%E8%BD%AE%E5%BB%93%EF%BC%8C%E7%AB%8B%E4%BD%93%E4%B8%8B%E7%9A%84%E5%A4%96%E8%BD%AE%E5%BB%93%EF%BC%8C%E8%8F%B2%E6%B6%85%E5%B0%94%E7%8E%B0%E8%B1%A1%E6%80%BB%E5%92%8C/"/>
       <url>/2021/12/08/Shader-%E5%B9%B3%E9%9D%A2%E4%B8%8B%E7%9A%84%E5%A4%96-%E5%86%85%E8%BD%AE%E5%BB%93%EF%BC%8C%E7%AB%8B%E4%BD%93%E4%B8%8B%E7%9A%84%E5%A4%96%E8%BD%AE%E5%BB%93%EF%BC%8C%E8%8F%B2%E6%B6%85%E5%B0%94%E7%8E%B0%E8%B1%A1%E6%80%BB%E5%92%8C/</url>
