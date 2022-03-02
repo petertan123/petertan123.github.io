@@ -17,6 +17,35 @@
     
     
     <entry>
+      <title>基于ET的回合制战棋-技能部分</title>
+      <link href="/2022/03/02/%E5%9F%BA%E4%BA%8EET%E7%9A%84%E5%9B%9E%E5%90%88%E5%88%B6%E6%88%98%E6%A3%8B-%E6%8A%80%E8%83%BD%E9%83%A8%E5%88%86/"/>
+      <url>/2022/03/02/%E5%9F%BA%E4%BA%8EET%E7%9A%84%E5%9B%9E%E5%90%88%E5%88%B6%E6%88%98%E6%A3%8B-%E6%8A%80%E8%83%BD%E9%83%A8%E5%88%86/</url>
+      
+        <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>​        目前技能设计大类分为普通技能和终结技，且技能物件都基于BaseSkillItem，其两边的思路都会在之后进行介绍</p><h2 id="终结技"><a href="#终结技" class="headerlink" title="终结技"></a>终结技</h2>]]></content>
+      
+      
+      <categories>
+          
+          <category> 设计 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 学习心得 </tag>
+            
+            <tag> ET </tag>
+            
+            <tag> Unity </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>基于ET的回合制战棋-网络部分</title>
       <link href="/2022/03/02/%E5%9F%BA%E4%BA%8EET%E7%9A%84%E5%9B%9E%E5%90%88%E5%88%B6%E6%88%98%E6%A3%8B-%E7%BD%91%E7%BB%9C%E9%83%A8%E5%88%86/"/>
       <url>/2022/03/02/%E5%9F%BA%E4%BA%8EET%E7%9A%84%E5%9B%9E%E5%90%88%E5%88%B6%E6%88%98%E6%A3%8B-%E7%BD%91%E7%BB%9C%E9%83%A8%E5%88%86/</url>
