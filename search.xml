@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>C# CLR VIA--委托</title>
+      <link href="/2022/05/19/C-CLR-VIA-%E5%A7%94%E6%89%98/"/>
+      <url>/2022/05/19/C-CLR-VIA-%E5%A7%94%E6%89%98/</url>
+      
+        <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="CLR-VIA"><a href="#CLR-VIA" class="headerlink" title="CLR VIA"></a>CLR VIA</h1><h2 id="委托"><a href="#委托" class="headerlink" title="委托"></a>委托</h2><ul><li><p>所有委托类型都派生自MulticastDelegate（间接继承Delegate），其中三个重要的非公共分为别<span style="color:red">_target、_methodPtr、_invocationList</span>，其在CLR中都有具体解释<br><img src="https://petertan-imgsubmit.oss-cn-guangzhou.aliyuncs.com/img/image-20220519220646401.png" alt="image-20220519220646401"></p></li><li><p>所有委托都有一个构造器，它获取两个参数：一个是对象引用，另一个是引用了回调方法的整数，在Invoke被调用时，它使用私有字段_target和_methodPtr在指定对象上调用包装好的回调方法</p></li><li><p>所有的委托对象都是一个包装器，其中包装了一个方法和调用该方法时需要操作的对象，包装器之间通过_invocationList之间进行连接，作为<span style="color:red">委托链</span>来使用。</p></li><li><p>对于+=和-=进行了封装，通过IL代码可以看到+=其实是调用了Delegate.Combine，而-=其实是调用了Delegate.Remove</p><ul><li><p>Combine:以Combine(fbChain,fb1)为例子</p><ul><li>若发现fbChain已引用了一个委托对象，会构造一个新的委托对象，对其_target和_methodPtr进行初始化，同时将_invocationList初始化为一个数组，数组中对应元素会指向对应的委托fb1（类似深度拷贝）</li><li>若发现是null，则直接赋予fb1中的值，fbChain变为fb1的引用</li><li><span style="color:skyblue">对于多播委托的添加（若fb1为多播委托），则会将fb1的_invocationList中的所有委托顺序加入到fbChain中，如果超过_invocationList中的length则会进行扩容操作</span><br>放上对应的部分源码：<br><img src="https://petertan-imgsubmit.oss-cn-guangzhou.aliyuncs.com/img/image-20220519230637406.png" alt="image-20220519230637406"></li></ul><p>下方是CLR中对应截图</p><p><img src="https://petertan-imgsubmit.oss-cn-guangzhou.aliyuncs.com/img/image-20220519222813890.png" alt="image-20220519222813890"></p><p><img src="https://petertan-imgsubmit.oss-cn-guangzhou.aliyuncs.com/img/image-20220519232702682.png" alt="image-20220519232702682"></p></li><li><p>Remove:以Remove(fbChain,fb1)为例子<br>其扫描第一个实参（例子中为fbChain）所引用的委托数组（从末尾向索引0扫描），Remove查找的是_target和_methodPtr字段与第二个实参（fb1）中字段相同的委托</p><ul><li>如果找到匹配的委托，并且数组中只剩余一个数据项，就返回该数据项</li><li>如果找到匹配的委托，并且数组中还剩余多个数据项，就新建一个委托对象，初始化_invocationList数组并将除删除数据外的委托放入其中，并返回引用。<span style="color:red">如果从链中删除了仅有的一个元素，Remove会返回null</span></li><li><span style="color:skyblue">对于多播委托的移除，会在当前索引处顺序判断是否存在某个部分与该多播委托相同，相同则进行移除</span><br>放上对应的源码：<br><img src="https://petertan-imgsubmit.oss-cn-guangzhou.aliyuncs.com/img/image-20220519230709454.png" alt="image-20220519230709454"><br><img src="https://petertan-imgsubmit.oss-cn-guangzhou.aliyuncs.com/img/image-20220519230730581.png" alt="image-20220519230730581"></li></ul><p><span style="color:skyblue">PS：每次Remove只能从链中删除一个委托，它不会删除匹配target和_methodPtr字段的所有委托</span></p></li></ul></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> C# </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> C# </tag>
+            
+            <tag> CLR </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>基于ET的回合制战棋-场景切换部分</title>
       <link href="/2022/03/02/%E5%9F%BA%E4%BA%8EET%E7%9A%84%E5%9B%9E%E5%90%88%E5%88%B6%E6%88%98%E6%A3%8B-%E5%9C%BA%E6%99%AF%E5%88%87%E6%8D%A2%E9%83%A8%E5%88%86/"/>
       <url>/2022/03/02/%E5%9F%BA%E4%BA%8EET%E7%9A%84%E5%9B%9E%E5%90%88%E5%88%B6%E6%88%98%E6%A3%8B-%E5%9C%BA%E6%99%AF%E5%88%87%E6%8D%A2%E9%83%A8%E5%88%86/</url>
