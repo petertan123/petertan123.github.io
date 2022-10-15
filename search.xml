@@ -4,6 +4,48 @@
   
     
     <entry>
+      <title>2D地形笔刷探索</title>
+      <link href="/2022/10/15/2D%E5%9C%B0%E5%BD%A2%E7%AC%94%E5%88%B7%E6%8E%A2%E7%B4%A2/"/>
+      <url>/2022/10/15/2D%E5%9C%B0%E5%BD%A2%E7%AC%94%E5%88%B7%E6%8E%A2%E7%B4%A2/</url>
+      
+        <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="2D地形九宫格笔刷"><a href="#2D地形九宫格笔刷" class="headerlink" title="2D地形九宫格笔刷"></a>2D地形九宫格笔刷</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>参考地址：<a href="https://blog.csdn.net/twopointfive/article/details/104255705?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522166010106916782425148904%2522%252C%2522scm%2522%253A%252220140713.130102334.pc%255Fall.%2522%257D&request_id=166010106916782425148904&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~first_rank_ecpm_v1~pc_rank_34-5-104255705-null-null.142%5Ev40%5Epc_rank_34_ecpm0,185%5Ev2%5Econtrol&utm_term=%E5%A8%84%E7%A3%8ALorry&spm=1018.2226.3001.4187">War3 魔兽争霸悬崖地形算法</a></p><p>主要思路如下</p><ol><li><p>划分cell的内部格子为0001，0010，0100，1000四部分<br><img src="https://img-blog.csdnimg.cn/8e8880106044437fbb966ae1b0f2a05e.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA5aiE56OKbG9ycnk=,size_12,color_FFFFFF,t_70,g_se,x_16" alt="img"></p></li><li><p>在笔刷采样时采样划分出的小格<br><img src="https://petertan-imgsubmit.oss-cn-guangzhou.aliyuncs.com/img/image-20220810195820987.png" alt="image-20220810195820987"></p></li><li><p>计算每个cell被采样到的小格之和作为weight权重，用weight来采样对应texture，<br>如上图中<img src="https://petertan-imgsubmit.oss-cn-guangzhou.aliyuncs.com/img/image-20220810200104542.png" alt="image-20220810200104542">最终采样的结果为<img src="https://petertan-imgsubmit.oss-cn-guangzhou.aliyuncs.com/img/image-20220810200154620.png" alt="image-20220810200154620"></p><p>采样地形纹理贴图：<br><img src="https://img-blog.csdnimg.cn/7734310489174ff6afec79ab1b47943a.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA5aiE56OKbG9ycnk=,size_16,color_FFFFFF,t_70,g_se,x_16" alt="img"></p><p>最终结果：</p><p><img src="https://img-blog.csdnimg.cn/438b46704c1440f084fefcd73f25a978.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA5aiE56OKbG9ycnk=,size_20,color_FFFFFF,t_70,g_se,x_16" alt="img"></p></li></ol><h2 id="实现过程"><a href="#实现过程" class="headerlink" title="实现过程"></a>实现过程</h2><ul><li>主要通过Odin设计编辑器+ScriptableObject记录笔刷数据、地图数据、笔刷资源的方式</li><li>对地图中所有cell生成对应的4个小格brushCell，整合为Sample Map，通过射线方式采样九宫格范围内的brushCell，同时记录下对应实际地图cell的weight，最终通过每个cell的weight采样获取对应的贴图</li></ul><h2 id="项目使用"><a href="#项目使用" class="headerlink" title="项目使用"></a>项目使用</h2><h3 id="创建地图"><a href="#创建地图" class="headerlink" title="创建地图"></a>创建地图</h3><ul><li>在Tools/2DBrush中打开编辑界面</li><li>放置一个GameObject作为地图cell存放的parent，这里取名为MapRoot</li><li>在Map/MapConfig中右键创建MapConfig，并配置地图数据参数<br><img src="https://petertan-imgsubmit.oss-cn-guangzhou.aliyuncs.com/img/image-20220810201018401.png" alt="image-20220810201018401"></li><li>在MapMenuEditor中选择对应的MapConfig，读取对应的配置信息，在修改后可以通过save map Asset进行保存<br><img src="https://petertan-imgsubmit.oss-cn-guangzhou.aliyuncs.com/img/image-20220810201126107.png" alt="image-20220810201126107"></li><li>将MapRoot的物件拖入到界面的MapRoot中，点击GenerateMap可以生成地图<br><img src="https://petertan-imgsubmit.oss-cn-guangzhou.aliyuncs.com/img/image-20220810201258281.png" alt="image-20220810201258281"></li></ul><p><span style="color:skyblue">Tips：注意因为二维数组不支持序列化，所以在编译后会导致MapRoot中存储的地图Grid的GameObject消息丢失，这时需要在GenerateMap界面中选择对应的MapConfig和拖入MapRoot后点击Reload Map重新生成，后面可能会改成直接用child的顺序index来获取对应位置或者更改可序列化数据结构，也可以通过列表mapCells来重新加载二维数组Grid</span></p><h3 id="地图笔刷"><a href="#地图笔刷" class="headerlink" title="地图笔刷"></a>地图笔刷</h3><ul><li><p>在Map/BrushConfig中创建笔刷配置BrushConfig，在Map/SampleConfig中创建2D采样贴图配置BrushConfig主要用于显示划分小格，<br><img src="https://petertan-imgsubmit.oss-cn-guangzhou.aliyuncs.com/img/image-20220810201653267.png" alt="image-20220810201653267"></p></li><li><p>打开MapMenuEditor中的MapBrush，选取对应的MapConfig和BrushConfig，随后拖入生成的地图MapRoot</p><p><img src="https://petertan-imgsubmit.oss-cn-guangzhou.aliyuncs.com/img/image-20220811190639882.png" alt="image-20220811190639882"></p></li><li><p>进行笔刷</p><ul><li><p>Single笔刷：对单个cell进行贴图笔刷，拖入对应的singleMat作为刷子，点击StartBrush生成小格权重图覆盖在MapRoot上方，进行笔刷操作，左键刷材质，结束后点击StopBrush关闭采样图<br><img src="https://petertan-imgsubmit.oss-cn-guangzhou.aliyuncs.com/img/image-20220811190614291.png" alt="image-20220811190614291"></p></li><li><p>Sample笔刷：输入划分的行数SplitNum，选择对应的SampleConfig，点击StartBrush生成小格权重图，左键点击小格进行选取，<span style="color:skyblue">笔刷范围为小格为单位的九宫格</span>，在选取结束后点击SampleTexture根据权重采样对应贴图，结束笔刷则点击StopBrush关闭采样图<br>采样方式</p><ul><li><p>Texture：直接用美术给出的图进行UV切分采样到对应的小格，在实现的过程中用MaterialPropertyBlock进行优化</p><p>优化代码：<img src="https://petertan-imgsubmit.oss-cn-guangzhou.aliyuncs.com/img/image-20220811193056962.png" alt="image-20220811193056962">)<br>对shader的修改：<img src="https://petertan-imgsubmit.oss-cn-guangzhou.aliyuncs.com/img/image-20220811191210374.png" alt="image-20220811191210374"></p></li><li><p>SO：需要先在Map/SampleConfig/中配置好对应的采样配置asset<br><img src="https://petertan-imgsubmit.oss-cn-guangzhou.aliyuncs.com/img/image-20220811191403863.png" alt="image-20220811191403863"><br>在SampleConfig中选择<br><img src="https://petertan-imgsubmit.oss-cn-guangzhou.aliyuncs.com/img/image-20220811191441290.png" alt="image-20220811191441290"></p></li></ul><p>采样小格：</p><p><img src="https://petertan-imgsubmit.oss-cn-guangzhou.aliyuncs.com/img/image-20220810211518001.png" alt="image-20220810211518001"><br>采样贴图：<br><img src="https://petertan-imgsubmit.oss-cn-guangzhou.aliyuncs.com/img/image-20220810211631954.png" alt="image-20220810211631954"></p><p>整体过程：<br><img src="https://petertan-imgsubmit.oss-cn-guangzhou.aliyuncs.com/img/%E7%AC%94%E5%88%B7%E6%B5%81%E7%A8%8B.gif" alt="笔刷流程"></p></li></ul></li></ul><p><span style="color:skyblue">Tips：</span></p><ul><li>在StartBrush后会隐藏掉BrushType，不能切换，点击StopBrush后才能切换</li><li>如果发现BrushMap时mapRoot脚本因为重新生成了地图而丢失，可以点击RefreshRoot按钮重新获取<br><img src="https://petertan-imgsubmit.oss-cn-guangzhou.aliyuncs.com/img/image-20220811193915001.png" alt="image-20220811193915001"></li></ul>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> Unity </tag>
+            
+            <tag> 客户端 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>UI EventSystem点击源码解析</title>
+      <link href="/2022/10/15/UI-EventSystem%E7%82%B9%E5%87%BB%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/"/>
+      <url>/2022/10/15/UI-EventSystem%E7%82%B9%E5%87%BB%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/</url>
+      
+        <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="UI-EventSystem源码解析"><a href="#UI-EventSystem源码解析" class="headerlink" title="UI EventSystem源码解析"></a>UI EventSystem源码解析</h1><h2 id="总流程"><a href="#总流程" class="headerlink" title="总流程"></a>总流程</h2><ol><li>RaycasterManager中注册了所有的Raycaster，其中有一个为GraphicRaycaster，其与Canvas配套使用，管理了自己所有勾选了raycastTarget的Graphic</li><li>每次通过InputModule点击时，会调用EventSystem遍历所有Raycaster，找到点到的所有内容，UI通过GraphicRaycaster，找到点到的所有Graphic，然后取第一个</li><li>将拿到的Graphic对应的GameObject填充到PointerEventData中，ExecuteEvents执行handler并传递PointerEventData，向上找到第一个对应的handler进行处理</li></ol><h2 id="RaycastManager"><a href="#RaycastManager" class="headerlink" title="RaycastManager"></a>RaycastManager</h2><p>管理了所有的BaseRaycaster，其实就包括<span style="color:skyblue">GraphicRaycaster、PhysicsRaycaster、Physics2DRaycaster</span>，通过AddRaycaster(BaseRaycaster baseRaycaster)进行注册</p><h2 id="GraphicRaycaster"><a href="#GraphicRaycaster" class="headerlink" title="GraphicRaycaster"></a>GraphicRaycaster</h2><p>与Canvas配套使用，其中<span style="color:orange">Raycast(Canvas canvas, Camera eventCamera, Vector2 pointerPosition, IList&lt;Graphic&gt; foundGraphics, List&lt;Graphic&gt; results)</span> 可以过滤Canvas中所有勾选了raycastTarget的Graphic，配合<span style="color:orange">Raycast(PointerEventData eventData, List&lt;RaycastResult&gt; resultAppendList)</span>获取到所有的点击Graphic</p><h2 id="TouchInputModule"><a href="#TouchInputModule" class="headerlink" title="TouchInputModule"></a>TouchInputModule</h2><p><span style="color:orange">processTouchEvents()</span>的点击事件过程，<span style="color:orange">GetTouchPointerEventData(Touch input, out bool pressed, out bool released)</span>通过touch获取到PointerDataEvent，其中pointerCurrentRaycast也在这个过程中找到点到的所有内容并取第一个，<span style="color:orange">ProcessTouchPress(PointerEventData pointerEvent)</span>时获取到pointerCurrentRaycast对应go，并且获取以其为起点向上找到第一个对应的handler进行处理，不同的handler如<span style="color:skyblue">IPointerClickHandler，IDragHandler等</span></p><ul><li><span style="color:skyblue">Tips:FakeTouches()同理，这时用的是鼠标操作</span></li></ul><h3 id="代码流程"><a href="#代码流程" class="headerlink" title="代码流程"></a>代码流程</h3><p>这里以processTouchEvent()的过程为例子</p><ul><li>EventSystem.Update()，本质上就是一个Monobahaviour的Update生命周期</li><li>TouchInputModule.Process(), 根据是否UseFakeInput()–也就是鼠标输入分别执行FakeTouches()和ProcessTouchEvents()</li><li>TouchInputModule.ProcessTouchEvents()，获取Touch点</li><li>TouchInputModule.GetTouchPointerEventData()，获取对应Touch点的PointerEventData<ul><li>eventSystem.RaycastAll()，通过PointerEventData计算出RaycastResult，其在内部会获取RaycastManager中所有的raycasters并排序，而后通过Raycast()获取raycastResult</li><li>FindFirstRaycast()，获取raycastResult中的第一项，同时将其存入到pointerData.pointerCurrentRaycast中</li></ul></li><li>TouchInputModule.ProcessTouchPress()，对上一步骤的PointerEventData进行分析，也就是获取对应PointerEventData的的go并找到对应的handler处理Event<ul><li>Execute.GetHandlerEvent&lt;&gt;()，以对应的go为起点向上找第一个能处理handlerEvent的go，具体也就是重写了比如IPointerClickHandler、IDragHandler的go</li><li>Execute.Execute()，执行对应handler的处理回调</li></ul></li></ul>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> Unity </tag>
+            
+            <tag> 客户端 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Shader-处理2DSprite在3D场景中穿模现象</title>
       <link href="/2022/05/27/Shader-%E5%A4%84%E7%90%862DSprite%E5%9C%A83D%E5%9C%BA%E6%99%AF%E4%B8%AD%E7%A9%BF%E6%A8%A1%E7%8E%B0%E8%B1%A1/"/>
       <url>/2022/05/27/Shader-%E5%A4%84%E7%90%862DSprite%E5%9C%A83D%E5%9C%BA%E6%99%AF%E4%B8%AD%E7%A9%BF%E6%A8%A1%E7%8E%B0%E8%B1%A1/</url>
@@ -68,11 +110,11 @@
       
         <tags>
             
+            <tag> Unity </tag>
+            
             <tag> 学习心得 </tag>
             
             <tag> ET </tag>
-            
-            <tag> Unity </tag>
             
         </tags>
       
@@ -97,11 +139,11 @@
       
         <tags>
             
+            <tag> Unity </tag>
+            
             <tag> 学习心得 </tag>
             
             <tag> ET </tag>
-            
-            <tag> Unity </tag>
             
         </tags>
       
@@ -126,11 +168,11 @@
       
         <tags>
             
+            <tag> Unity </tag>
+            
             <tag> 学习心得 </tag>
             
             <tag> ET </tag>
-            
-            <tag> Unity </tag>
             
         </tags>
       
@@ -157,9 +199,9 @@
             
             <tag> 学习心得 </tag>
             
-            <tag> Unity框架 </tag>
-            
             <tag> ET </tag>
+            
+            <tag> Unity框架 </tag>
             
         </tags>
       
@@ -222,7 +264,7 @@
       <link href="/2021/12/15/Leetcode-851-%E5%96%A7%E9%97%B9%E4%B8%8E%E5%AF%8C%E6%9C%89/"/>
       <url>/2021/12/15/Leetcode-851-%E5%96%A7%E9%97%B9%E4%B8%8E%E5%AF%8C%E6%9C%89/</url>
       
-        <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h2 id="851-喧闹和富有"><a href="#851-喧闹和富有" class="headerlink" title="851. 喧闹和富有"></a><a href="https://leetcode-cn.com/problems/loud-and-rich/">851. 喧闹和富有</a></h2><p><img src="https://petertan-imgsubmit.oss-cn-guangzhou.aliyuncs.com/img/image-20211215102759427.png" alt="image-20211215102759427"></p><h3 id="解题思路："><a href="#解题思路：" class="headerlink" title="解题思路："></a>解题思路：</h3><p>​    这题主要是对拓扑排序的考察，因为题目要求的是拥有钱不少于person x，所以我们可以根据richer建立有向无环图deg,同时用vis存储对应入度数，即<span style="color:red">对于richer中每个关系rich来说，建立rich[0]到rich[1]的有向边，因此拓扑排序得到的结果就会是由富有-&gt;贫穷,</span>而根据拓扑排序的结果，我们可以用当前遍历到的元素x的answer更新其相邻节点的answer，即<span style="color:red">若满足quiet[answer[x]]&lt;quiet[answer[y]],则answer[y]=answer[x]。</span></p><p>​    以下为C++代码：</p><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">vector&lt;<span class="keyword">int</span>&gt; <span class="title">loudAndRich</span><span class="params">(vector&lt;vector&lt;<span class="keyword">int</span>&gt;&gt;&amp; richer, vector&lt;<span class="keyword">int</span>&gt;&amp; quiet)</span> </span>&#123;</span><br><span class="line">       <span class="comment">//拓扑排序例子：</span></span><br><span class="line">        <span class="comment">//拓扑排序使得每一条u-&gt;v,u都在v之前出现</span></span><br><span class="line">        <span class="keyword">int</span> n = quiet.<span class="built_in">size</span>();</span><br><span class="line">        vector&lt;vector&lt;<span class="keyword">int</span>&gt;&gt; <span class="built_in">deg</span>(n);</span><br><span class="line">        <span class="function">vector&lt;<span class="keyword">int</span>&gt; <span class="title">vis</span><span class="params">(n)</span></span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//记录下当前的richer情况，绘制有向图</span></span><br><span class="line">        <span class="keyword">for</span> (vector&lt;<span class="keyword">int</span>&gt;&amp; rich : richer) &#123;</span><br><span class="line">            deg[rich[<span class="number">0</span>]].<span class="built_in">push_back</span>(rich[<span class="number">1</span>]); <span class="comment">//绘制有向边</span></span><br><span class="line">            vis[rich[<span class="number">1</span>]]++; <span class="comment">//入度+1</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        queue&lt;<span class="keyword">int</span>&gt; q;</span><br><span class="line">        <span class="function">vector&lt;<span class="keyword">int</span>&gt; <span class="title">ans</span><span class="params">(n)</span></span>;</span><br><span class="line">        <span class="built_in">iota</span>(ans.<span class="built_in">begin</span>(), ans.<span class="built_in">end</span>(), <span class="number">0</span>);<span class="comment">//以自身为默认值，因为自己拥有的钱一定不少于自身</span></span><br><span class="line">        <span class="comment">//记录下当前入度为0的节点</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (vis[i] == <span class="number">0</span>) &#123;</span><br><span class="line">                q.<span class="built_in">push</span>(i);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//进行拓扑排序</span></span><br><span class="line">        <span class="keyword">while</span> (!q.<span class="built_in">empty</span>()) &#123;</span><br><span class="line">            <span class="keyword">int</span> x = q.<span class="built_in">front</span>();</span><br><span class="line">            q.<span class="built_in">pop</span>();</span><br><span class="line">            <span class="comment">//更新当前x对应的answer</span></span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> y : deg[x]) &#123;</span><br><span class="line">                <span class="keyword">if</span> (quiet[ans[x]] &lt; quiet[ans[y]]) &#123;</span><br><span class="line">                    ans[y] = ans[x];</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="comment">//更新入度</span></span><br><span class="line">                <span class="keyword">if</span> (--vis[y] == <span class="number">0</span>) &#123;</span><br><span class="line">                    q.<span class="built_in">push</span>(y);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>]]></content>
+        <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h2 id="851-喧闹和富有"><a href="#851-喧闹和富有" class="headerlink" title="851. 喧闹和富有"></a><a href="https://leetcode-cn.com/problems/loud-and-rich/">851. 喧闹和富有</a></h2><p><img src="https://petertan-imgsubmit.oss-cn-guangzhou.aliyuncs.com/img/image-20211215102759427.png" alt="image-20211215102759427"></p><h3 id="解题思路："><a href="#解题思路：" class="headerlink" title="解题思路："></a>解题思路：</h3><ul><li>这题主要是对拓扑排序的考察，因为题目要求的是拥有钱不少于person x，所以我们可以根据richer建立有向无环图deg,同时用vis存储对应入度数，即<span style="color:red">对于richer中每个关系rich来说，建立rich[0]到rich[1]的有向边，因此拓扑排序得到的结果就会是由富有-&gt;贫穷,</span>而根据拓扑排序的结果，我们可以用当前遍历到的元素x的answer更新其相邻节点的answer，即<span style="color:red">若满足quiet[answer[x]] &lt;quiet[answer[y]],则answer[y]=answer[x]。</span></li></ul><p>以下为C++代码：</p><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">vector&lt;<span class="keyword">int</span>&gt; <span class="title">loudAndRich</span><span class="params">(vector&lt;vector&lt;<span class="keyword">int</span>&gt;&gt;&amp; richer, vector&lt;<span class="keyword">int</span>&gt;&amp; quiet)</span> </span>&#123;</span><br><span class="line">       <span class="comment">//拓扑排序例子：</span></span><br><span class="line">        <span class="comment">//拓扑排序使得每一条u-&gt;v,u都在v之前出现</span></span><br><span class="line">        <span class="keyword">int</span> n = quiet.<span class="built_in">size</span>();</span><br><span class="line">        vector&lt;vector&lt;<span class="keyword">int</span>&gt;&gt; <span class="built_in">deg</span>(n);</span><br><span class="line">        <span class="function">vector&lt;<span class="keyword">int</span>&gt; <span class="title">vis</span><span class="params">(n)</span></span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//记录下当前的richer情况，绘制有向图</span></span><br><span class="line">        <span class="keyword">for</span> (vector&lt;<span class="keyword">int</span>&gt;&amp; rich : richer) &#123;</span><br><span class="line">            deg[rich[<span class="number">0</span>]].<span class="built_in">push_back</span>(rich[<span class="number">1</span>]); <span class="comment">//绘制有向边</span></span><br><span class="line">            vis[rich[<span class="number">1</span>]]++; <span class="comment">//入度+1</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        queue&lt;<span class="keyword">int</span>&gt; q;</span><br><span class="line">        <span class="function">vector&lt;<span class="keyword">int</span>&gt; <span class="title">ans</span><span class="params">(n)</span></span>;</span><br><span class="line">        <span class="built_in">iota</span>(ans.<span class="built_in">begin</span>(), ans.<span class="built_in">end</span>(), <span class="number">0</span>);<span class="comment">//以自身为默认值，因为自己拥有的钱一定不少于自身</span></span><br><span class="line">        <span class="comment">//记录下当前入度为0的节点</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (vis[i] == <span class="number">0</span>) &#123;</span><br><span class="line">                q.<span class="built_in">push</span>(i);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//进行拓扑排序</span></span><br><span class="line">        <span class="keyword">while</span> (!q.<span class="built_in">empty</span>()) &#123;</span><br><span class="line">            <span class="keyword">int</span> x = q.<span class="built_in">front</span>();</span><br><span class="line">            q.<span class="built_in">pop</span>();</span><br><span class="line">            <span class="comment">//更新当前x对应的answer</span></span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> y : deg[x]) &#123;</span><br><span class="line">                <span class="keyword">if</span> (quiet[ans[x]] &lt; quiet[ans[y]]) &#123;</span><br><span class="line">                    ans[y] = ans[x];</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="comment">//更新入度</span></span><br><span class="line">                <span class="keyword">if</span> (--vis[y] == <span class="number">0</span>) &#123;</span><br><span class="line">                    q.<span class="built_in">push</span>(y);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>]]></content>
       
       
       <categories>
@@ -281,7 +323,7 @@
       
       <categories>
           
-          <category> shader </category>
+          <category> Shader </category>
           
       </categories>
       
@@ -479,9 +521,9 @@
             
             <tag> 学习心得 </tag>
             
-            <tag> Unity框架 </tag>
-            
             <tag> ET </tag>
+            
+            <tag> Unity框架 </tag>
             
         </tags>
       
@@ -506,11 +548,11 @@
       
         <tags>
             
+            <tag> Unity </tag>
+            
             <tag> 学习心得 </tag>
             
             <tag> ET </tag>
-            
-            <tag> Unity </tag>
             
             <tag> 框架 </tag>
             
@@ -960,11 +1002,11 @@
       
         <tags>
             
+            <tag> Unity </tag>
+            
             <tag> 学习心得 </tag>
             
             <tag> ET </tag>
-            
-            <tag> Unity </tag>
             
             <tag> 框架 </tag>
             
@@ -1045,9 +1087,9 @@
       
         <tags>
             
-            <tag> ET </tag>
-            
             <tag> Unity </tag>
+            
+            <tag> ET </tag>
             
             <tag> 框架 </tag>
             
@@ -1269,11 +1311,11 @@
       
         <tags>
             
+            <tag> Unity </tag>
+            
             <tag> 学习心得 </tag>
             
             <tag> ET </tag>
-            
-            <tag> Unity </tag>
             
             <tag> 框架 </tag>
             
